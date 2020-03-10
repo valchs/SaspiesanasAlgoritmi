@@ -12,10 +12,11 @@ namespace SaspiesanasAlgoritmi
         static void Main(string[] args)
         {
             HuffmanCompressor oHuffmanCompressor = new HuffmanCompressor();
-            oHuffmanCompressor.Compress("C:\\Users\\VS00537\\Desktop\\uni\\hufman\\test.txt");
+            oHuffmanCompressor.Compress("C:\\test.txt");
             Console.WriteLine();
             //oHuffmanCompressor.Decompress("Huffman.txt");
             Console.WriteLine();
+            Console.ReadLine();
         }
     }
 }
