@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SaspiesanasAlgoritmi.Huffman
 {
+    [Serializable]
     public class HuffmanNode
     {
         public HuffmanNode()

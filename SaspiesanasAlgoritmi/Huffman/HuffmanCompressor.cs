@@ -114,10 +114,30 @@ namespace SaspiesanasAlgoritmi.Huffman
                 {
                     oFileStream.Write(oByteList.ToArray(), 0, oByteList.Count);
                 }
+
+                // Serialize binary tree for decompression
+                string sSerializationFileName = Path.Combine(oFileInfo.Directory.FullName, String.Format("{0}.serialized", oFileInfo.Name.Replace(oFileInfo.Extension, "")));
+                using (Stream stream = File.Open(sSerializationFileName, FileMode.Create))
+                {
+                    var bformatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+                    bformatter.Serialize(stream, oRootHuffmanNode);
+                }
             }
         }
 
         public void Decompress(string FileName)
+        {
+            FileInfo oFileInfo = new FileInfo(FileName);
+            if (oFileInfo.Exists == true)
+            {
+                string sCompressedFileName = String.Format("{0}.serialized", oFileInfo.FullName.Replace(oFileInfo.Extension, ""));
+                Decompress(FileName, sCompressedFileName);
+            }
+            
+        }
+
+        public void Decompress(string FileName, string path)
         {
             FileInfo oFileInfo = new FileInfo(FileName);
 
@@ -132,8 +152,18 @@ namespace SaspiesanasAlgoritmi.Huffman
                     oFileStream.Read(oBuffer, 0, oBuffer.Length);
                 }
 
+
+                // Deserialize binary tree
+                var root = new HuffmanNode();
+                using (Stream stream = File.Open(path, FileMode.Open))
+                {
+                    var bformatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+                    root = (HuffmanNode)bformatter.Deserialize(stream);
+                }
+
                 //  Find the zero node
-                HuffmanNode oZeroHuffmanNode = oRootHuffmanNode;
+                HuffmanNode oZeroHuffmanNode = root;
                 while (oZeroHuffmanNode.Left != null)
                 {
                     oZeroHuffmanNode = oZeroHuffmanNode.Left;
@@ -176,7 +206,7 @@ namespace SaspiesanasAlgoritmi.Huffman
 
                         if (oCurrentHuffmanNode == null)
                         {
-                            oCurrentHuffmanNode = oRootHuffmanNode;
+                            oCurrentHuffmanNode = root;
                         }
 
                         if (cValue == '0')
